@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock paper scissors</title>
+</head>
+<body>
+  <button
+  onclick="
+  guessWinner('rock');
+  ">
+    Rock
+  </button>
+  <button
+  onclick="
+  guessWinner('paper');
+  ">
+    paper
+  </button>
+  <button
+  onclick="
+  guessWinner('scissors');
+  ">
+    scissors
+  </button>
+
+  <button onclick="
+  score.win= 0,
+  score.lose= 0,
+  score.ties= 0,
+  localStorage.setItem('score', JSON.stringify(score));
+  ">
+    reset
+  </button>
+  <script>
+    const score = JSON.parse(localStorage.getItem("score")) || {
+      win: 0,
+      lose:0,
+      ties:0
+    }
+
+    function guessWinner(paramter) {
+        const computerMove = getTime();
+       let winner='';
+       if(paramter==='rock')
+       {
+        winner = (computerMove==='Rock')?'tie.':(computerMove==='Paper')?'you lose.':'you win.';
+       }
+       if(paramter==='paper')
+       {
+        winner = (computerMove==='Paper')?'tie.':(computerMove==='Scissors')?'you lose.':'you win.';
+       }
+       if(paramter==='scissors')
+       {
+        winner = (computerMove==='Scissors')?'tie.':(computerMove==='Rock')?'you lose.':'you win.';
+       }
+       if(winner === 'tie.')
+       {
+        score.ties+=1;
+       } 
+       if(winner=== 'you lose.')
+       {
+        score.lose +=1;
+       }
+       if(winner === 'you win.')
+       {
+        score.win+=1;
+       }
+       localStorage.setItem("score",JSON.stringify(score));
+       alert(`you pick ${paramter},computer pick ${computerMove} and ${winner}
+       wins: ${score.win},loses: ${score.lose}, ties: ${score.ties}`);
+    }
+    function getTime()
+    {
+      const changetime = Math.random();
+      const time = (changetime>=0 && changetime<1/3)?'Rock':(changetime>=1/3 && changetime<1/2)?'Paper':'Scissors';
+      return time;
+    }
+
+  </script>
+</body>
+</html>
