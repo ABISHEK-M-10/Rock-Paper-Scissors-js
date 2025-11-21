@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock paper scissors</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial;
+    }
+    .rock-button,
+    .scissors-button,
+    .paper-button {
+      background-color: transparent;
+      border: solid;
+      border-color: white;
+      border-width: 3px;
+      border-radius: 100px;
+      padding: 25px;
+      cursor: pointer;
+    }
+    .moves {
+      margin-top: 30px;
+    }
+    .scissors-button,
+    .paper-button {
+      margin-left: 10px;
+    }
+    .move-js {
+      height: 50px
+    }
+    .score {
+      margin-top: 60px;;
+    }
+    .title {
+      font-size: 30px;
+    }
+    .reset-button,
+    .AutoPlay-button {
+      padding: 10px 15px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <p class="title">Rock paper scissors</p>
+  <button
+  class="rock-button"
+  onclick="
+  guessWinner('rock');
+  ">
+    <img src="images/rock-emoji.png" class="move-js">
+  </button>
+  <button
+  class="paper-button"
+  onclick="
+  guessWinner('paper');
+  ">
+    <img src="images/paper-emoji.png" class="move-js">
+  </button>
+  <button
+  class="scissors-button"
+  onclick="
+  guessWinner('scissors');
+  ">
+    <img src="images/scissors-emoji.png" class="move-js">
+  </button>
+  </p>
+  <p class="result"></p>
+  <p class="moves">
+  </p>
+
+  <p class="js-score score"></p>
+
+  <button 
+  class="reset-button"
+  onclick="
+  score.win= 0,
+  score.lose= 0,
+  score.ties= 0,
+  localStorage.setItem('score', JSON.stringify(score));
+  updatescore();
+  ">
+    Reset score
+  </button>
+  <button class="AutoPlay-button"
+  onclick="
+  autoplay();
+  ">
+    AutoPlay
+  </button>
+  <script>
+    const score = JSON.parse(localStorage.getItem("score")) || {
+      win: 0,
+      lose:0,
+      ties:0
+    }
+    updatescore();
+
+
+    function guessWinner(paramter) {
+       const computerMove = getTime();
+       let winner='';
+       if(paramter==='rock')
+       {
+        winner = (computerMove==='Rock')?'tie.':(computerMove==='Paper')?'You lose.':'You win.';
+       }
+       if(paramter==='paper')
+       {
+        winner = (computerMove==='Paper')?'tie.':(computerMove==='Scissors')?'You lose.':'You win.';
+       }
+       if(paramter==='scissors')
+       {
+        winner = (computerMove==='Scissors')?'tie.':(computerMove==='Rock')?'You lose.':'You win.';
+       }
+       if(winner === 'tie.')
+       {
+        score.ties+=1;
+       } 
+       if(winner=== 'You lose.')
+       {
+        score.lose +=1;
+       }
+       if(winner === 'You win.')
+       {
+        score.win+=1;
+       }
+       localStorage.setItem("score",JSON.stringify(score));
+       updatescore();
+       moves1(paramter, computerMove);
+       result1(winner);
+
+
+    }
+    function getTime()
+    {
+      const changetime = Math.random();
+      const time = (changetime>=0 && changetime<1/3)?'Rock':(changetime>=1/3 && changetime<2/3)?'Paper':'Scissors';
+      return time;
+    }
+
+    function updatescore() {
+      document.querySelector('.js-score')
+        .innerHTML = `wins: ${score.win},loses: ${score.lose}, ties: ${score.ties}`;
+    }
+
+    function result1(winner) {
+      document.querySelector(".result").innerHTML = winner;
+    }
+
+    function moves1(paramter, computerMove) {
+      document.querySelector(".moves")
+        .innerHTML = `you
+    <img src="images/${paramter}-emoji.png" class="move-js">
+    <img src="images/${computerMove}-emoji.png" class="move-js">
+    computer`;
+    }
+    let isautoplay = false;
+    let intervalId;
+
+    function autoplay() {
+      if(!isautoplay)
+      {
+        intervalId = setInterval (function(){
+          const autoMove = getTime().toLowerCase();
+          guessWinner(autoMove);
+        },1000
+      );
+        isautoplay = true;
+      }
+      else{
+        clearInterval(intervalId);
+        isautoplay = false;
+      }
+    }
+
+  </script>
+</body>
+</html>
